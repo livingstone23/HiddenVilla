@@ -2,17 +2,19 @@
 
 <h1 class="text-danger">Parent Child Component</h1>
 
-<CascadingValue Value="@MessageForGrandChild"> 
-    <ChildComponent OnClickBtnMethod="@ShowMessage" Title="This title come from ParentComponent">
+<CascadingValue Value="@MessageForGrandChild" Name = "MessageForGrandParent"> 
+    <CascadingValue Value="@LuckyNumber" Name = "GrantParentLuckyNumber">
+        <ChildComponent OnClickBtnMethod="@ShowMessage" Title="This title come from ParentComponent">
    
-        <ChildContent>
-            Render Fragment with ChildContent From Parent! WooHOO!
-        </ChildContent>
-        <DangerChildContent>
-            Render Fragment with DangerChildContent From Parent! WooHOO!
-        </DangerChildContent>
+            <ChildContent>
+                Render Fragment with ChildContent From Parent! WooHOO!
+            </ChildContent>
+            <DangerChildContent>
+                Render Fragment with DangerChildContent From Parent! WooHOO!
+            </DangerChildContent>
 
-    </ChildComponent>
+        </ChildComponent>
+    </CascadingValue> 
 </CascadingValue>
 
 <AnotherChildComponent Placeholder="Enter the Room Name from Parent"></AnotherChildComponent>
@@ -21,7 +23,10 @@
 
 
 @code {
+
     private string MessageForGrandChild = "This is a message from Grand Parent";
+
+    public int LuckyNumber { get; set; } = 7;
 
     private string messageText = "";
 
