@@ -11,6 +11,7 @@
     </button>
     <a href="/learnrouting" class="btn btn-secondary">Back to Routing</a>
     <NavLink href="/learnrouting" class="btn btn-secondary">Back to Routing with NavLink</NavLink>
+    <button class="btn btn-secondary" @onclick="BackToRouting">Back to Routing "NavigationManager"</button>
 </p>
 
 @code {
@@ -24,6 +25,11 @@
         var queryParam = System.Web.HttpUtility.ParseQueryString(absoluteUri.Query);
         param1 = queryParam["param1"];
         param2 = queryParam["param2"];
+    }
+
+    private void BackToRouting()
+    {
+        NavigationManager.NavigateTo("learnrouting");
     }
 
 }
