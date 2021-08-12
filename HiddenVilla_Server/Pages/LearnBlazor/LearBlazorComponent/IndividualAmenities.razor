@@ -6,7 +6,7 @@
     
     @Amenities.Name<br/>
     @Amenities.Description<br />
-
+    RF from parent - @FirstFragment @SecondFragment
     <EditDeleteButton IsAdmin="false"></EditDeleteButton>
 
 </div>
@@ -22,6 +22,12 @@
 
     [Parameter]
     public EventCallback<string> OnAmenitySelection { get; set; }
+
+    [Parameter]
+    public RenderFragment FirstFragment { get; set; }
+
+    [Parameter]
+    public RenderFragment SecondFragment { get; set; }
 
     protected async Task AmenitySelectionChanged(MouseEventArgs e, string name)
     {
