@@ -2,20 +2,26 @@
 
 <h1 class="text-danger">Parent Child Component</h1>
 
-<ChildComponent OnClickBtnMethod="@ShowMessage" Title="This title come from ParentComponent">
-    <ChildContent>
-        Render Fragment with ChildContent From Parent! WooHOO!
-    </ChildContent>
-    @*<DangerChildContent>
-        Render Fragment with DangerChildContent From Parent! WooHOO!
-    </DangerChildContent>*@
-</ChildComponent>
+<CascadingValue Value="@MessageForGrandChild"> 
+    <ChildComponent OnClickBtnMethod="@ShowMessage" Title="This title come from ParentComponent">
+   
+        <ChildContent>
+            Render Fragment with ChildContent From Parent! WooHOO!
+        </ChildContent>
+        <DangerChildContent>
+            Render Fragment with DangerChildContent From Parent! WooHOO!
+        </DangerChildContent>
+
+    </ChildComponent>
+</CascadingValue>
+
 <AnotherChildComponent Placeholder="Enter the Room Name from Parent"></AnotherChildComponent>
 
 <p><b>@messageText</b></p>
 
 
 @code {
+    private string MessageForGrandChild = "This is a message from Grand Parent";
 
     private string messageText = "";
 
