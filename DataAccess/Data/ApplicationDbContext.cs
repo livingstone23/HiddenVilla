@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DataAccess.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Data
 {
@@ -8,6 +9,11 @@ namespace DataAccess.Data
         {
             
         }
+
+
+        public DbSet<HotelRoom> HotelRooms { get; set; }
+
+
 
 
 
