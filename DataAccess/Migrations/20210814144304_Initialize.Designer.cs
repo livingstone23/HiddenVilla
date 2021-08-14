@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210813070928_AddHotelRoomToDb")]
-    partial class AddHotelRoomToDb
+    [Migration("20210814144304_Initialize")]
+    partial class Initialize
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,7 +21,7 @@ namespace DataAccess.Migrations
                 .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("DataAccess.Model.HotelRoom", b =>
+            modelBuilder.Entity("DataAccess.Data.HotelRoom", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -59,6 +59,42 @@ namespace DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("HotelRooms");
+                });
+
+            modelBuilder.Entity("DataAccess.Data.HotelRoomImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RoomImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoomId");
+
+                    b.ToTable("HotelRoomImages");
+                });
+
+            modelBuilder.Entity("DataAccess.Data.HotelRoomImage", b =>
+                {
+                    b.HasOne("DataAccess.Data.HotelRoom", "HotelRoom")
+                        .WithMany("HotelRoomImages")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("HotelRoom");
+                });
+
+            modelBuilder.Entity("DataAccess.Data.HotelRoom", b =>
+                {
+                    b.Navigation("HotelRoomImages");
                 });
 #pragma warning restore 612, 618
         }

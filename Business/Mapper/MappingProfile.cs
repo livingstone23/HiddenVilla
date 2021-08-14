@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using DataAccess.Model;
+using DataAccess.Data;
 using Models.DTO;
 
 namespace Business.Mapper
@@ -10,6 +10,9 @@ namespace Business.Mapper
         {
             CreateMap<HotelRoomDTO, HotelRoom>();
             CreateMap<HotelRoom, HotelRoomDTO>();
+
+            CreateMap<HotelRoomImage, HotelRoomImageDTO>().ReverseMap();
+            
 
         }
     }

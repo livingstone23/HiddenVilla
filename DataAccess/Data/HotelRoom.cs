@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccess.Model
+namespace DataAccess.Data
 {
     public class HotelRoom
     {
@@ -24,6 +24,6 @@ namespace DataAccess.Model
         public string UpdatedBy { get; set; }
         public DateTime UpdatedDate { get; set; }
 
-        //public virtual ICollection<HotelRoomImage> HotelRoomImages { get; set; }
+        public virtual ICollection<HotelRoomImage> HotelRoomImages { get; set; }
     }
 }
