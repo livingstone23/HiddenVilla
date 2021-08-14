@@ -62,7 +62,7 @@ namespace Business.Repository
         {
             try
             {
-                HotelRoomDTO hotelRoom = _mapper.Map<HotelRoom, HotelRoomDTO>(await _db.HotelRooms.FirstOrDefaultAsync(x => x.Id == roomId));
+                HotelRoomDTO hotelRoom = _mapper.Map<HotelRoom, HotelRoomDTO>(await _db.HotelRooms.Include(x=>x.HotelRoomImages).FirstOrDefaultAsync(x => x.Id == roomId));
                 return hotelRoom;
             }
             catch (Exception ex)
