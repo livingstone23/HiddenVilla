@@ -6,10 +6,16 @@
 <div class="row">
     <button class="btn btn-secondary" @onclick="(()=>TestConfirmBox(ConfirmMessage))">Test confirm Button</button>
 </div>
-<div class="row">
-    <button class="btn btn-success" @onclick="TestSuccess">Test confirm Button</button>
-    <button class="btn btn-danger" @onclick="TestFailure">Test confirm Button</button>
+<div class="row mt-4">
+    <button class="btn btn-success" @onclick="TestSuccess">Test Toaster Button</button>
+    <button class="btn btn-danger" @onclick="TestFailure">Test Toaster Failure</button>
 </div>
+
+<div class="row mt-4">
+    <button class="btn btn-success" @onclick="TestSuccessSwal">Test Swal Success</button>
+    <button class="btn btn-danger" @onclick="TestFailureSwal">Test Swal Failure</button>
+</div>
+
 <div class="row">
     @if (ConfirmResult)
     {
@@ -35,7 +41,7 @@
 
     } 
 
-     private async Task TestSuccess()
+    private async Task TestSuccess()
     {
 
         //await JSRuntime.InvokeVoidAsync("ShowToastr", "success","Success Message");
@@ -43,12 +49,22 @@
 
     } 
 
-     private async Task TestFailure()
+    private async Task TestFailure()
     {
 
         //await JSRuntime.InvokeVoidAsync("ShowToastr", "error","Error Message");
         await JSRuntime.ToastrError("Failure message LCANO");
 
+    } 
+
+    private async Task TestSuccessSwal()
+    {
+        await JSRuntime.InvokeVoidAsync("ShowSwal","success","Task complete sucess LCANO");
+    } 
+
+    private async Task TestFailureSwal()
+    {
+        await JSRuntime.InvokeVoidAsync("ShowSwal","error","Task error LCANO");
     } 
 
 
