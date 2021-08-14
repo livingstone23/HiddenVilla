@@ -7,6 +7,10 @@
     <button class="btn btn-secondary" @onclick="TestConfirmBox">Test confirm Button</button>
 </div>
 <div class="row">
+    <button class="btn btn-success" @onclick="TestSuccess">Test confirm Button</button>
+    <button class="btn btn-danger" @onclick="TestFailure">Test confirm Button</button>
+</div>
+<div class="row">
     @if (ConfirmResult)
     {
         <p>Confirmation has been made!</p>
@@ -29,5 +33,20 @@
         ConfirmResult = await JSRuntime.InvokeAsync<bool>("confirm", confirmMessage);
 
     } 
+
+     private async Task TestSuccess()
+    {
+
+        await JSRuntime.InvokeVoidAsync("ShowToastr", "success","Success Message");
+
+    } 
+
+     private async Task TestFailure()
+    {
+
+        await JSRuntime.InvokeVoidAsync("ShowToastr", "error","Error Message");
+
+    } 
+
 
 }
