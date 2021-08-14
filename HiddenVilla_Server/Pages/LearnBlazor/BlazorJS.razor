@@ -4,7 +4,7 @@
 <h3>BlazorJS</h3>
 
 <div class="row">
-    <button class="btn btn-secondary" @onclick="TestConfirmBox">Test confirm Button</button>
+    <button class="btn btn-secondary" @onclick="(()=>TestConfirmBox(ConfirmMessage))">Test confirm Button</button>
 </div>
 <div class="row">
     <button class="btn btn-success" @onclick="TestSuccess">Test confirm Button</button>
@@ -24,27 +24,30 @@
 
 @code {
 
-    private string confirmMessage = "Are you sure you want to click?";
+    private string ConfirmMessage = "Are you sure you want to click?";
+
     private bool ConfirmResult { get; set; }
 
-    private async Task TestConfirmBox()
+    private async Task TestConfirmBox(string message)
     {
 
-        ConfirmResult = await JSRuntime.InvokeAsync<bool>("confirm", confirmMessage);
+        ConfirmResult = await JSRuntime.InvokeAsync<bool>("confirm", message);
 
     } 
 
      private async Task TestSuccess()
     {
 
-        await JSRuntime.InvokeVoidAsync("ShowToastr", "success","Success Message");
+        //await JSRuntime.InvokeVoidAsync("ShowToastr", "success","Success Message");
+        await JSRuntime.ToastrSuccess("Success message LCANO");
 
     } 
 
      private async Task TestFailure()
     {
 
-        await JSRuntime.InvokeVoidAsync("ShowToastr", "error","Error Message");
+        //await JSRuntime.InvokeVoidAsync("ShowToastr", "error","Error Message");
+        await JSRuntime.ToastrError("Failure message LCANO");
 
     } 
 
