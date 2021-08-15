@@ -9,6 +9,7 @@
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JsRuntime
 @inject IFileUpload FileUpload
+@inject NavigationManager NavigationManager
 
 
 <div class="row mt-2 mb-5">
@@ -43,13 +44,48 @@
                         <ValidationMessage For="()=>HotelRoomModel.SqFt"></ValidationMessage>
                     </div>
 
-                    <div class=form-group>
+                    <div class=form-group style="height:250px;">
                         <label>Details</label>
-                        <InputTextArea @bind-Value="HotelRoomModel.Details" class="form-control"></InputTextArea>
+                        @*<InputTextArea @bind-Value="HotelRoomModel.Details" class="form-control"></InputTextArea>*@
+                        
+
+                        <BlazoredTextEditor @ref="@QuillHtml" Placeholder="Please enter room details">
+                            <ToolbarContent>
+                                <select class="ql-header">
+                                    <option selected=""></option>
+                                    <option value="1"></option>
+                                    <option value="2"></option>
+                                    <option value="3"></option>
+                                    <option value="4"></option>
+                                    <option value="5"></option>
+                                </select>
+                                <span class="ql-formats">
+                                    <button class="ql-bold"></button>
+                                    <button class="ql-italic"></button>
+                                    <button class="ql-underline"></button>
+                                    <button class="ql-strike"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <select class="ql-color"></select>
+                                    <select class="ql-background"></select>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-list" value="ordered"></button>
+                                    <button class="ql-list" value="bullet"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-link"></button>
+                                </span>
+                            </ToolbarContent>
+                            <EditorContent>
+                               
+                            </EditorContent>
+                        </BlazoredTextEditor>
                         <ValidationMessage For="()=>HotelRoomModel.Details"></ValidationMessage>
+
                     </div>
 
-                    <div class=form-group>
+                   <div class=form-group style="padding-top:70px;">
                         <InputFile OnChange="HandleImageUpload" multiple></InputFile>
                         <div class="row">
                              @if(IsImageUploadProcessStarted)
@@ -112,6 +148,8 @@
     private bool IsImageUploadProcessStarted { get; set; } = false;
 
 
+    public BlazoredTextEditor QuillHtml { get; set; } = new BlazoredTextEditor();
+
     protected override async Task OnInitializedAsync()
     {
         if (Id != null)
@@ -123,11 +161,38 @@
             {
                 HotelRoomModel.ImageUrls = HotelRoomModel.HotelRoomImages.Select(u => u.RoomImageUrl).ToList(); 
             }
+            //SetHTML(); 
         }
         else
         {
             //create
             HotelRoomModel = new HotelRoomDTO();
+        }
+        
+    }
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+        
+
+        bool loading = true;
+        while (loading)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(HotelRoomModel.Details))
+                {
+                   await this.QuillHtml.LoadHTMLContent(HotelRoomModel.Details);
+                }
+                loading = false;
+            }
+            catch
+            {
+                await Task.Delay(10);
+                loading = true;
+            }
         }
     }
 
@@ -150,6 +215,7 @@
 
             if (HotelRoomModel.Id != 0 && Title == "Update")
             {
+                HotelRoomModel.Details = await QuillHtml.GetHTML();
                 //update
                 var updateRoomResult = await HotelRoomRepository.UpdateHotelRoom(HotelRoomModel.Id, HotelRoomModel);
                 if ( HotelRoomModel.ImageUrls != null && HotelRoomModel.ImageUrls.Any()|| 
@@ -159,7 +225,7 @@
                     {
                         foreach (var deletedImagesName in DeletedImageNames)
                         {
-                            var imageName = deletedImagesName.Replace($"RoomImages/","");
+                            var imageName = deletedImagesName.Replace($"{NavigationManager.BaseUri}RoomImages/","");
                             
                             var result = FileUpload.DeleteFile(imageName);
 
@@ -174,6 +240,7 @@
             else
             {
                 //create
+                HotelRoomModel.Details = await QuillHtml.GetHTML();
                 var createdResult = await HotelRoomRepository.CreateHotelRoom(HotelRoomModel);
                 await AddHotelRoomImage(createdResult);
                 await JsRuntime.ToastrSuccess("Hotel Room created successfully. ");
@@ -186,6 +253,15 @@
 
         NavigationManager.NavigateTo("hotel-room");
     }
+
+    //public void SetHTML()
+    //{
+    //    if (!string.IsNullOrEmpty(HotelRoomModel.Details))
+    //    {
+    //       this.QuillHtml.LoadHTMLContent(HotelRoomModel.Details);
+    //    }
+    //    StateHasChanged();
+    //}
 
     private async Task HandleImageUpload(InputFileChangeEventArgs e)
     {
@@ -259,7 +335,7 @@
         try
         {
             var imageIndex = HotelRoomModel.ImageUrls.FindIndex(x => x == imageUrl);
-            var imageName = imageUrl.Replace($"RoomImages/","");
+            var imageName = imageUrl.Replace($"{NavigationManager.BaseUri}RoomImages/","");
             if (HotelRoomModel.Id == 0 && Title == "Create")
             {
                 var result = FileUpload.DeleteFile(imageName);

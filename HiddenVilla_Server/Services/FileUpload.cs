@@ -1,6 +1,8 @@
 ﻿using HiddenVilla_Server.Services.IService;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -10,10 +12,12 @@ namespace HiddenVilla_Server.Services
     public class FileUpload : IFileUpload
     {
         private readonly IWebHostEnvironment _webHostEnviroment;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public FileUpload(IWebHostEnvironment webHostEnvironment)
+        public FileUpload(IWebHostEnvironment webHostEnvironment, IHttpContextAccessor httpContextAccessor)
         {
             _webHostEnviroment = webHostEnvironment;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public bool DeleteFile(string fileName)
@@ -57,7 +61,8 @@ namespace HiddenVilla_Server.Services
                     memoryStream.WriteTo(fs);
                 }
 
-                var fullPath = $"RoomImages/{fileName}";
+                var url = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host.Value}/";
+                var fullPath = $"{url}RoomImages/{fileName}";
                 return fullPath;
             }
             catch (Exception ex)
