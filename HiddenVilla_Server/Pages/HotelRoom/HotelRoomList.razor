@@ -6,7 +6,7 @@
 @inject IJSRuntime JsRuntime
 @inject HiddenVilla_Server.Services.IService.IFileUpload FileUpload
 @inject NavigationManager NavigationManager
-
+@attribute [Authorize]
 
 <div class="row mt-4">
     <div class="col-8">
@@ -64,6 +64,9 @@
 
 @code {
 
+    //[CascadingParameter]
+    //public Task<AuthenticationState> AuthenticationState { get; set; }
+
     private IEnumerable<HotelRoomDTO> HotelRooms { get; set; } = new List<HotelRoomDTO>();
 
     private int? DeleteRoomId { get; set; } = null;
@@ -72,6 +75,14 @@
 
     protected override async Task OnInitializedAsync()
     {
+        //var authenticationState = await AuthenticationState;
+
+        //if (!authenticationState.User.Identity.IsAuthenticated)
+        //{
+        //    NavigationManager.NavigateTo("/identity/account/login");
+        //}
+
+
         HotelRooms = await HotelRoomRepository.GetAllHotelRooms();
     }
 
