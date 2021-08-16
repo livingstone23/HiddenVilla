@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace HiddenVilla_Server.Services
 {
-    public class Initializer : IDbInitializer
+    public class DbInitializer : IDbInitializer
     {
         private readonly ApplicationDbContext _db;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public Initializer(ApplicationDbContext db, UserManager<IdentityUser> userManager,
+        public DbInitializer(ApplicationDbContext db, UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> roleManager)
         {
             _db = db;
