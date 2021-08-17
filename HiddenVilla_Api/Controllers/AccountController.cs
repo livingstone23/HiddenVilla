@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using Models.DTO;
+using System.IdentityModel.Tokens.Jwt;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -66,6 +69,63 @@ namespace HiddenVilla_Api.Controllers
             }
             return StatusCode(201);
         }
+
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> SignIn([FromBody] AuthenticationDTO authenticationDTO)
+        {
+            var result = await _signInManager.PasswordSignInAsync(authenticationDTO.UserName,
+                authenticationDTO.Password, false, false);
+            if (result.Succeeded)
+            {
+                var user = await _userManager.FindByNameAsync(authenticationDTO.UserName);
+                if (user == null)
+                {
+                    return Unauthorized(new AuthenticationResponseDTO
+                    {
+                        IsAuthSuccessful = false,
+                        ErrorMessage = "Invalid Authentication"
+                    });
+                }
+
+                //everything is valid and we need to login the user
+
+            //    var signinCredentials = GetSigningCredentials();
+            //    var claims = await GetClaims(user);
+
+            //    var tokenOptions = new JwtSecurityToken(
+            //        issuer: _aPISettings.ValidIssuer,
+            //        audience: _aPISettings.ValidAudience,
+            //        claims: claims,
+            //        expires: DateTime.Now.AddDays(30),
+            //        signingCredentials: signinCredentials);
+
+            //    var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+
+            //    return Ok(new AuthenticationResponseDTO
+            //    {
+            //        IsAuthSuccessful = true,
+            //        Token = token,
+            //        userDTO = new UserDTO
+            //        {
+            //            Name = user.Name,
+            //            Id = user.Id,
+            //            Email = user.Email,
+            //            PhoneNo = user.PhoneNumber
+            //        }
+            //    });
+            }
+            else
+            {
+                return Unauthorized(new AuthenticationResponseDTO
+                {
+                    IsAuthSuccessful = false,
+                    ErrorMessage = "Invalid Authentication"
+                });
+            }
+        }
+
 
     }
 }
