@@ -28,21 +28,23 @@ namespace HiddenVilla_Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection2")));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders()
+            //services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>()
+            //    .AddDefaultTokenProviders()
+            //    .AddDefaultUI();
+
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders()
                 .AddDefaultUI();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IHotelRoomRepository, HotelRoomRepository>();
             services.AddScoped<IAmenityRepository, AmenityRepository>();
-            services.AddScoped<IHotelImageRepository, HotelImageRepository>();
-
             services.AddScoped<IDbInitializer, DbInitializer>();
-
+            services.AddScoped<IHotelImageRepository, HotelImageRepository>();
+            services.AddScoped<IRoomOrderDetailsRepository, RoomOrderDetailsRepository>();
             services.AddScoped<IFileUpload, FileUpload>();
-
             services.AddRazorPages();
             services.AddHttpContextAccessor();
             services.AddServerSideBlazor();
