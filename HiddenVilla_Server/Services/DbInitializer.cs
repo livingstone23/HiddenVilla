@@ -49,12 +49,12 @@ namespace HiddenVilla_Server.Services
 
             _userManager.CreateAsync(new IdentityUser
             {
-                UserName = "admin@gmail.com",
-                Email = "admin@gmail.com",
+                UserName = "apiuser@gmail.com",
+                Email = "apiuser@gmail.com",
                 EmailConfirmed = true
             }, "Admin123*").GetAwaiter().GetResult();
 
-            IdentityUser user = _db.Users.FirstOrDefault(u => u.Email == "admin@gmail.com");
+            IdentityUser user = _db.Users.FirstOrDefault(u => u.Email == "apiuser@gmail.com");
             _userManager.AddToRoleAsync(user, SD.Role_Admin).GetAwaiter().GetResult();
 
         }

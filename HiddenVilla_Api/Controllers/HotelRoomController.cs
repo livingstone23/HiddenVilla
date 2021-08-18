@@ -1,4 +1,5 @@
 ﻿using Business.Repository.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
@@ -10,6 +11,8 @@ using System.Threading.Tasks;
 
 namespace HiddenVilla_Api.Controllers
 {
+    [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class HotelRoomController : Controller
     {

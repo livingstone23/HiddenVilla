@@ -155,13 +155,13 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var authenticationState = await AuthenticationState;
+        //var authenticationState = await AuthenticationState;
 
-        if (!authenticationState.User.Identity.IsAuthenticated)
-        {
-            var uri = new Uri(NavigationManager.Uri);
-            NavigationManager.NavigateTo($"/identity/account/login?returnUrl={uri.LocalPath}");
-        }
+        //if (!authenticationState.User.Identity.IsAuthenticated)
+        //{
+        //    var uri = new Uri(NavigationManager.Uri);
+        //    NavigationManager.NavigateTo($"/identity/account/login?returnUrl={uri.LocalPath}");
+        //}
 
         if (Id != null)
         {

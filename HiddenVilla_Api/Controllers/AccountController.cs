@@ -9,30 +9,41 @@ using System.IdentityModel.Tokens.Jwt;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using HiddenVilla_Api.Helper;
+using Microsoft.Extensions.Options;
+using System.Security.Claims;
+using System.Collections.Generic;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace HiddenVilla_Api.Controllers
 {
+
     [Route("api/[controller]/[action]")]
     [ApiController]
     [Authorize]
     public class AccountController : Controller
     {
+
+
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        //private readonly APISettings _aPISettings;
+        private readonly APISettings _aPISettings;
+
 
         public AccountController(SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
-            RoleManager<IdentityRole> roleManager
-            //IOptions<APISettings> options
+            RoleManager<IdentityRole> roleManager,
+            IOptions<APISettings> options
             )
         {
             _roleManager = roleManager;
             _userManager = userManager;
             _signInManager = signInManager;
-            //_aPISettings = options.Value;
+            _aPISettings = options.Value;
         }
+
 
         [HttpPost]
         [AllowAnonymous]
@@ -91,30 +102,30 @@ namespace HiddenVilla_Api.Controllers
 
                 //everything is valid and we need to login the user
 
-            //    var signinCredentials = GetSigningCredentials();
-            //    var claims = await GetClaims(user);
+                var signinCredentials = GetSigningCredentials();
+                var claims = await GetClaims(user);
 
-            //    var tokenOptions = new JwtSecurityToken(
-            //        issuer: _aPISettings.ValidIssuer,
-            //        audience: _aPISettings.ValidAudience,
-            //        claims: claims,
-            //        expires: DateTime.Now.AddDays(30),
-            //        signingCredentials: signinCredentials);
+                var tokenOptions = new JwtSecurityToken(
+                    issuer: _aPISettings.ValidIssuer,
+                    audience: _aPISettings.ValidAudience,
+                    claims: claims,
+                    expires: DateTime.Now.AddDays(30),
+                    signingCredentials: signinCredentials);
 
-            //    var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+                var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
 
-            //    return Ok(new AuthenticationResponseDTO
-            //    {
-            //        IsAuthSuccessful = true,
-            //        Token = token,
-            //        userDTO = new UserDTO
-            //        {
-            //            Name = user.Name,
-            //            Id = user.Id,
-            //            Email = user.Email,
-            //            PhoneNo = user.PhoneNumber
-            //        }
-            //    });
+                return Ok(new AuthenticationResponseDTO
+                {
+                    IsAuthSuccessful = true,
+                    Token = token,
+                    userDTO = new UserDTO
+                    {
+                        Name = user.Name,
+                        Id = user.Id,
+                        Email = user.Email,
+                        PhoneNo = user.PhoneNumber
+                    }
+                });
             }
             else
             {
@@ -124,6 +135,32 @@ namespace HiddenVilla_Api.Controllers
                     ErrorMessage = "Invalid Authentication"
                 });
             }
+        }
+
+        
+        private SigningCredentials GetSigningCredentials()
+        {
+            var secret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_aPISettings.SecretKey));
+            return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
+        }
+
+
+        private async Task<List<Claim>> GetClaims(ApplicationUser user)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name,user.Email),
+                new Claim(ClaimTypes.Email,user.Email),
+                new Claim("Id",user.Id),
+
+            };
+            var roles = await _userManager.GetRolesAsync(await _userManager.FindByEmailAsync(user.Email));
+
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+            return claims;
         }
 
 
