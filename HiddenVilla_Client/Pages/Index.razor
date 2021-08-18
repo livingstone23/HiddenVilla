@@ -1,5 +1,9 @@
 ﻿@page "/"
+@using Common
+@using HiddenVilla_Client.Helper
 @using HiddenVilla_Client.Model.ViewModel
+@inject ILocalStorageService localStorage
+@inject IJSRuntime jsRuntime
 
 
     <div class="row p-0 m-0">
@@ -26,7 +30,7 @@
             </a>
         </div>
     </div>
-    <EditForm  Model="HomeModel" OnValidSubmit="SaveInitialData">
+    <EditForm  Model="HomeModel" OnValidSubmit="SaveInitialData" >
         <div class="row p-0 mx-0 mt-4">
 
             <div class="col-12 col-md-5  offset-md-1 pl-2  pr-2 pr-md-0">
@@ -79,12 +83,13 @@
         {
             HomeModel.EndDate = HomeModel.StartDate.AddDays(HomeModel.NoOfNights);
 
-            //await localStorage.SetItemAsync(SD.Local_InitialBooking, HomeModel);
+            await localStorage.SetItemAsync(SD.Local_InitialBooking, HomeModel);
             //navigationManager.NavigateTo("hotel/rooms", true);
         }
         catch (Exception e)
         {
-            //await jsRuntime.ToastrError(e.Message);
+
+            await jsRuntime.ToastrError(e.Message);
             
         }
     }
