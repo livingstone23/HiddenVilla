@@ -11,8 +11,8 @@ using System.Threading.Tasks;
 
 namespace HiddenVilla_Api.Controllers
 {
+    //[Authorize]
     [ApiController]
-    [Authorize]
     [Route("api/[controller]")]
     public class HotelRoomController : Controller
     {
