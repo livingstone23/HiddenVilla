@@ -204,11 +204,11 @@ else
     {
         Rooms = await hotelRoomService.GetHotelRooms(HomeModel.StartDate.ToString("MM/dd/yyyy"), HomeModel.EndDate.ToString("MM/dd/yyyy"));
 
-        //foreach (var room in Rooms)
-        //{
-        //    room.TotalAmount = room.RegularRate * HomeModel.NoOfNights;
-        //    room.TotalDays = HomeModel.NoOfNights;
-        //}
+        foreach (var room in Rooms)
+        {
+            room.TotalAmount = room.RegularRate * HomeModel.NoOfNights;
+            room.TotalDays = HomeModel.NoOfNights;
+        }
 
     }
 
