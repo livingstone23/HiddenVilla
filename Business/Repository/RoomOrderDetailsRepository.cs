@@ -7,7 +7,6 @@ using Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Business.Repository
@@ -60,12 +59,13 @@ namespace Business.Repository
             try
             {
                 RoomOrderDetails roomOrder = await _db.RoomOrderDetails
-                    .Include(u => u.HotelRoom).ThenInclude(x => x.HotelRoomImages)
-                    .FirstOrDefaultAsync(u => u.Id == roomOrderId);
+                                                    .Include(u => u.HotelRoom).ThenInclude(x => x.HotelRoomImages)
+                                                    .FirstOrDefaultAsync(u => u.Id == roomOrderId);
 
                 RoomOrderDetailsDTO roomOrderDetailsDTO = _mapper.Map<RoomOrderDetails, RoomOrderDetailsDTO>(roomOrder);
+
                 roomOrderDetailsDTO.HotelRoomDTO.TotalDays = roomOrderDetailsDTO.CheckOutDate
-                    .Subtract(roomOrderDetailsDTO.CheckInDate).Days;
+                                                                .Subtract(roomOrderDetailsDTO.CheckInDate).Days;
 
                 return roomOrderDetailsDTO;
             }
@@ -75,7 +75,22 @@ namespace Business.Repository
             }
         }
 
+        public async Task<bool> IsRoomBooked(int RoomId, DateTime checkInDate, DateTime checkOutDate)
+        {
+            var status = false;
 
+            var existingBooking = await _db.RoomOrderDetails.Where(x => x.RoomId == RoomId && x.IsPaymentSuccessful &&
+            (checkInDate < x.CheckOutDate && checkInDate.Date > x.CheckInDate
+            || checkOutDate.Date > x.CheckInDate.Date && checkInDate.Date < checkInDate.Date
+            )).FirstOrDefaultAsync();
+
+            if (existingBooking != null)
+            {
+                status = true;
+            }
+
+            return status;
+        }
 
         public async Task<RoomOrderDetailsDTO> MarkPaymentSuccessful(int id)
         {

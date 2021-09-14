@@ -1,4 +1,5 @@
 ﻿using Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,5 +12,6 @@ namespace Business.Repository.IRepository
         public Task<RoomOrderDetailsDTO> GetRoomOrderDetail(int roomOrderId);
         public Task<IEnumerable<RoomOrderDetailsDTO>> GetAllRoomOrderDetails();
         public Task<bool> UpdateOrderStatus(int RoomOrderId, string status);
+        public Task<bool> IsRoomBooked(int RoomId, DateTime checkInDate, DateTime checkOutDate);
     }
 }

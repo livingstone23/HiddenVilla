@@ -10,6 +10,7 @@ namespace Business.Mapper
         public MappingProfile()
         {
             CreateMap<HotelRoomDTO, HotelRoom>();
+
             CreateMap<HotelRoom, HotelRoomDTO>();
 
             CreateMap<HotelRoomImage, HotelRoomImageDTO>().ReverseMap();
@@ -17,6 +18,7 @@ namespace Business.Mapper
             CreateMap<HotelRoomImage, HotelRoomImageDTO>().ReverseMap();
 
             CreateMap<RoomOrderDetails, RoomOrderDetailsDTO>().ForMember(x => x.HotelRoomDTO, opt => opt.MapFrom(c => c.HotelRoom));
+            
             CreateMap<RoomOrderDetailsDTO, RoomOrderDetails>();
         }
     }
